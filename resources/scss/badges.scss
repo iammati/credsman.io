@@ -1,0 +1,33 @@
+$warning: #ffc107;
+$info: #33b5e5;
+$success: rgb(24, 215, 140);
+$fail: #ff3547;
+
+.badge {
+    text-align: end;
+    background-color: #4285f4;
+    color: #fff;
+    border-radius: 15px;
+    font-size: 85%;
+    font-weight: bold;
+    padding: 4px 12px;
+    white-space: nowrap;
+}
+
+.inactive {
+    color: #000 !important;
+    background-color: $warning !important;
+}
+
+.success,
+.running {
+    background-color: $success !important;
+}
+
+.info {
+    background-color: $info !important;
+}
+
+.fail {
+    background-color: $fail !important;
+}

@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'badges';
+
+html {
+    cursor: default;
+
+    ::selection {
+        background: #b3d4fc !important;
+        text-shadow: none;
+    }
+
+    label {
+        cursor: pointer;
+        width: fit-content;
+    }
+
+    input {
+        &[type='checkbox'] {
+            cursor: pointer;
+        }
+    }
+}
