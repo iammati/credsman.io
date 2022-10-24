@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { useForm, usePage, Link } from '@inertiajs/inertia-vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import ActionSection from '@/Components/ActionSection.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
@@ -14,21 +14,22 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 import TextInput from '@/Components/TextInput.vue';
+import VaultData from '@/Components/VaultData.vue';
 import { PlusIcon } from '@heroicons/vue/24/solid';
 
 defineProps({
     vault: Object,
 });
 
-const vaultDataManager = () => {
-    alert('XD');
-};
-
-const vaultDataManagerForm = useForm({
+const form = useForm({
     logo: null,
     name: '',
     url: '',
 });
+
+const submitted = () => {
+    alert('XD');
+};
 </script>
 
 <template>
@@ -36,7 +37,7 @@ const vaultDataManagerForm = useForm({
         <SectionBorder />
 
         <!-- Vault Data Manager -->
-        <FormSection @submitted="vaultDataManager">
+        <FormSection @submitted="submitted">
             <template #title>
                 Vault Data Manager
             </template>
@@ -52,21 +53,24 @@ const vaultDataManagerForm = useForm({
                     </template>
 
                     <template v-else>
-                        <!-- <Link :href="route('vaults.data.add')"> -->
-                            <PrimaryButton>
-                                <PlusIcon class="h-4 w-4" />
+                        <VaultData />
+
+                        <div class="text-end">
+                            <PrimaryButton class="mt-4">
+                                <PlusIcon class="h-4 w-4 mr-1" />
+                                Add
                             </PrimaryButton>
-                        <!-- </Link> -->
+                        </div>
                     </template>
                 </div>
             </template>
 
             <template #actions>
-                <ActionMessage :on="vaultDataManagerForm.recentlySuccessful" class="mr-3">
+                <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                     Saved.
                 </ActionMessage>
 
-                <PrimaryButton :class="{ 'opacity-25': vaultDataManagerForm.processing }" :disabled="vaultDataManagerForm.processing">
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Save
                 </PrimaryButton>
             </template>

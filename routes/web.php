@@ -1,6 +1,7 @@
 <?php
 
 use App\Credsman;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\VaultController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -60,4 +61,7 @@ Route::middleware([
     Route::post('/vaults/store', [VaultController::class, 'store'])->name('vaults.store');
     Route::any('/vaults/update/{vault}', [VaultController::class, 'update'])->name('vaults.update');
     Route::get('/vaults/show/{vault}', [VaultController::class, 'show'])->name('vaults.show');
+
+    // Datas
+    Route::post('/vaults/datas/create', [DataController::class, 'create'])->name('vaults.datas.create');
 });

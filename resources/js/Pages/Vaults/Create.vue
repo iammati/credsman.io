@@ -2,6 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CreateVaultForm from '@/Pages/Vaults/Partials/CreateVaultForm.vue';
 import VaultDataManager from '@/Pages/Vaults/Partials/VaultDataManager.vue';
+import DeleteVaultForm from '@/Pages/Vaults/Partials/DeleteVaultForm.vue';
 
 defineProps({
     vault: Object,
@@ -27,6 +28,8 @@ defineProps({
                 <CreateVaultForm :vault="vault" />
 
                 <VaultDataManager :vault="vault" class="mt-10 sm:mt-0" />
+
+                <DeleteVaultForm :vault="vault" class="mt-10 sm:mt-0" />
             </div>
         </div>
     </AppLayout>
