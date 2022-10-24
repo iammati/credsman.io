@@ -52,11 +52,11 @@ const vaultDataManagerForm = useForm({
                     </template>
 
                     <template v-else>
-                        <Link :href="route('vaults.data.add')">
+                        <!-- <Link :href="route('vaults.data.add')"> -->
                             <PrimaryButton>
                                 <PlusIcon class="h-4 w-4" />
                             </PrimaryButton>
-                        </Link>
+                        <!-- </Link> -->
                     </template>
                 </div>
             </template>

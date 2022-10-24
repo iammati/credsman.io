@@ -45,14 +45,18 @@ class VaultController extends Controller
      */
     public function store(StoreVaultRequest $request)
     {
-        $path = $request->logo[0]->storePublicly('logos', [
-            'disk' => 'public',
-        ]);
-
         $vault = new Vault();
+
+        if ($request->logo) {
+            $path = $request->logo[0]->storePublicly('logos', [
+                'disk' => 'public',
+            ]);
+
+            $vault->logo = $path;
+        }
+
         $vault->name = $request->name;
         $vault->url = $request->url;
-        $vault->logo = $path;
         $vault->save();
 
         return redirect()->route('vaults');

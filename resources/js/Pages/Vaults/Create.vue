@@ -4,7 +4,7 @@ import CreateVaultForm from '@/Pages/Vaults/Partials/CreateVaultForm.vue';
 import VaultDataManager from '@/Pages/Vaults/Partials/VaultDataManager.vue';
 
 defineProps({
-    vault: Object ?? null,
+    vault: Object,
 });
 </script>
 

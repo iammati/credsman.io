@@ -6,14 +6,14 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
-defineProps({
-    vault: Object ?? null,
+const props = defineProps({
+    vault: Object,
 });
 
 const form = useForm({
-    logo: [],
-    name: '',
-    url: '',
+    logo: props.vault?.logo,
+    name: props.vault?.name,
+    url: props.vault?.url,
 });
 
 const createVault = () => {
@@ -78,7 +78,6 @@ const createVault = () => {
                     v-model="form.name"
                     type="text"
                     class="block w-full mt-1"
-                    :value="vault.name"
                     autofocus
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
@@ -92,7 +91,6 @@ const createVault = () => {
                     v-model="form.url"
                     type="text"
                     class="block w-full mt-1"
-                    :value="vault.url"
                 />
                 <InputError :message="form.errors.url" class="mt-2" />
             </div>
