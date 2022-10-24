@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b73ef68657d9b3f67c250402c52e39bc",
+    "content-hash": "9b9cce62d481fa3af992044e6b6b4584",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -997,42 +997,6 @@
                 }
             ],
             "time": "2022-08-28T14:45:39+00:00"
-        },
-        {
-            "name": "iammati/php-docker-sdk",
-            "version": "0.1.1",
-            "dist": {
-                "type": "path",
-                "url": "./packages/iammati/php-docker-sdk",
-                "reference": "ac4d45d39039be023d8eaf4cc1c37666f4484de7"
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.5",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "spatie/laravel-ignition": "^1.5",
-                "symfony/var-dumper": "^6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Iammati\\PhpDockerSdk\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mati Sediqi",
-                    "email": "mati_01@icloud.com"
-                }
-            ],
-            "description": "A little Docker Engine SDK for v1.41 written in PHP",
-            "transport-options": {
-                "relative": true
-            }
         },
         {
             "name": "inertiajs/inertia-laravel",
