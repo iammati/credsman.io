@@ -16,17 +16,22 @@ const form = useForm({
     url: props.vault?.url,
 });
 
-const createVault = () => {
-    form.post(route('vaults.store'), {
+const submitted = () => {
+    let action = 'store';
+    if (props.vault) {
+        action = 'update';
+    }
+
+    form.post(route(`vaults.${action}`, { vault: props.vault }), {
         forceFormData: true,
-        errorBag: 'createVault',
+        errorBag: `${action}Vault`,
         preserveScroll: true,
     });
 };
 </script>
 
 <template>
-    <FormSection @submitted="createVault">
+    <FormSection @submitted="submitted">
         <template #title>
             Vault Details
         </template>
@@ -58,7 +63,7 @@ const createVault = () => {
                 <InputLabel for="logo" value="Vault Logo" />
 
                 <input
-                    @input="form.logo = $event.target.files"
+                    @input="form.logo = $event.target.files[0]"
                     type="file"
                     name="logo"
                     id="logo"

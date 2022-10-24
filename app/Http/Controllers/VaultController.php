@@ -6,6 +6,7 @@ use App\Http\Requests\StoreVaultRequest;
 use App\Http\Requests\UpdateVaultRequest;
 use App\Models\Vault;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 use Laravel\Jetstream\Jetstream;
 
@@ -47,14 +48,9 @@ class VaultController extends Controller
     {
         $vault = new Vault();
 
-        if ($request->logo) {
-            $path = $request->logo[0]->storePublicly('logos', [
-                'disk' => 'public',
-            ]);
-
-            $vault->logo = $path;
-        }
-
+        $vault->logo = $request->logo->storePublicly('logos', [
+            'disk' => 'public',
+        ]);
         $vault->name = $request->name;
         $vault->url = $request->url;
         $vault->save();
@@ -95,7 +91,17 @@ class VaultController extends Controller
      */
     public function update(UpdateVaultRequest $request, Vault $vault)
     {
-        //
+        $vault->update($request->validationData(), $request->all());
+
+        if ($vault->logo instanceof UploadedFile) {
+            $vault->logo = $vault->logo->storePublicly('logos', [
+                'disk' => 'public',
+            ]);
+
+            $vault->save();
+        }
+
+        return redirect()->route('vaults');
     }
 
     /**
