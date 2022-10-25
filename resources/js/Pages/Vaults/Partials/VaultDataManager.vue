@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm, usePage, Link } from '@inertiajs/inertia-vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -17,7 +17,7 @@ import TextInput from '@/Components/TextInput.vue';
 import VaultData from '@/Components/VaultData.vue';
 import { PlusIcon } from '@heroicons/vue/24/solid';
 
-defineProps({
+const props = defineProps({
     vault: Object,
 });
 
@@ -48,20 +48,7 @@ const submitted = () => {
 
             <template #form>
                 <div class="col-span-6 sm:col-span-4">
-                    <template v-if="vault.datas?.length">
-                        {{ vault.datas?.length }}
-                    </template>
-
-                    <template v-else>
-                        <VaultData />
-
-                        <div class="text-end">
-                            <PrimaryButton class="mt-4">
-                                <PlusIcon class="h-4 w-4 mr-1" />
-                                Add
-                            </PrimaryButton>
-                        </div>
-                    </template>
+                    <VaultData :vault="vault" />
                 </div>
             </template>
 

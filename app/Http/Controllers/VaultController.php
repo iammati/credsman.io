@@ -68,7 +68,7 @@ class VaultController extends Controller
     {
         return Jetstream::inertia()->render($request, 'Vaults/Create', [
             'vault' => $vault,
-        ]);
+        ])->with('datas', $vault->datas);
     }
 
     /**

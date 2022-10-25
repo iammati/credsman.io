@@ -22,6 +22,6 @@ class Vault extends Model
 
     public function datas()
     {
-        return $this->hasMany(Data::class);
+        return $this->hasMany(Data::class, 'vault_id');
     }
 }

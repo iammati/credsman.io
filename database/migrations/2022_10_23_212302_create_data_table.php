@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('data', function (Blueprint $table) {
             $table->id();
             $table->integer('vault_id');
+            $table->string('group_name');
+            $table->binary('fields')->nullable();
             $table->timestamps();
         });
     }
