@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateVaultRequest;
 use App\Models\Vault;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Crypt;
 use Inertia\Inertia;
 use Laravel\Jetstream\Jetstream;
 
@@ -66,6 +67,19 @@ class VaultController extends Controller
      */
     public function show(Request $request, Vault $vault)
     {
+        // Encryption of the fields' values
+        foreach ($vault->datas as $key => $data) {
+            $fields = json_decode($data->fields, true);
+
+            foreach ($fields as $fieldKey => $field) {
+                foreach ($field as $fieldKeyIdentifier => $fieldValue) {
+                    $fields[$fieldKey][$fieldKeyIdentifier] = Crypt::encrypt($fieldValue);
+                }
+            }
+
+            $vault->datas[$key]->fields = json_encode($fields);
+        }
+
         return Jetstream::inertia()->render($request, 'Vaults/Create', [
             'vault' => $vault,
         ])->with('datas', $vault->datas);

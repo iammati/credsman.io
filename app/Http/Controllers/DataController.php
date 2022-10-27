@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDataRequest;
 use App\Http\Requests\UpdateDataRequest;
 use App\Models\Data;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class DataController extends Controller
 {
@@ -82,5 +84,27 @@ class DataController extends Controller
     public function destroy(Data $data)
     {
         //
+    }
+
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function decrypt(Request $request)
+    {
+        $value = $request->value;
+
+        return response(Crypt::decrypt($value));
+    }
+
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function encrypt(Request $request)
+    {
+        $value = $request->value;
+
+        return response(Crypt::encrypt($value));
     }
 }

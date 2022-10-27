@@ -5,6 +5,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { Inertia } from '@inertiajs/inertia';
+import NProgress from 'nprogress';
 
 const props = defineProps({
     vault: Object,
@@ -28,6 +30,17 @@ const submitted = () => {
         preserveScroll: true,
     });
 };
+
+const logoInputEvent = e => {
+    form.logo = e.target.files[0];
+};
+
+Inertia.on('progress', (event) => {
+    console.log(event);
+    if (NProgress.isStarted() && event.detail.progress.percentage) {
+        NProgress.set((event.detail.progress.percentage / 100) * 0.9)
+    }
+})
 </script>
 
 <template>
@@ -62,15 +75,39 @@ const submitted = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="logo" value="Vault Logo" />
 
-                <input
-                    @input="form.logo = $event.target.files[0]"
-                    type="file"
-                    name="logo"
-                    id="logo"
-                    class="block w-full mt-1"
-                />
+                <img v-if="vault" :src="`/storage/${vault.logo}`" :alt="`${vault.logo}`" id="preview">
 
-                <img v-if="vault" :src="`/storage/${vault.logo}`" alt="{{ vault.logo }}" class="preview">
+                <div id="logo-wrapper">
+                    <label for="logo" id="logo-label" class="mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"></path>
+                        </svg>
+
+                        <p class="mt-5" style="font-size: 1rem;">
+                            <span class="underline font-bold text-gray-800">Click to upload</span>
+
+                            <span class="text-gray-600">
+                                or drag and drop
+                            </span>
+                        </p>
+
+                        <p class="mt-1 text-gray-600" style="font-size: 14px;">
+                            Maximum file size is 5 MB.
+                        </p>
+                    </label>
+
+                    <div v-if="form.progress" className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                        <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" :width="form.progress.percentage"> {{ form.progress.percentage }}%</div>
+                    </div>
+
+                    <input
+                        @input="logoInputEvent($event)"
+                        type="file"
+                        name="logo"
+                        id="logo"
+                        class="w-full mt-1"
+                    />
+                </div>
 
                 <InputError :message="form.errors.logo" class="mt-2" />
             </div>
@@ -94,7 +131,7 @@ const submitted = () => {
                 <TextInput
                     id="url"
                     v-model="form.url"
-                    type="text"
+                    type="url"
                     class="block w-full mt-1"
                 />
                 <InputError :message="form.errors.url" class="mt-2" />
@@ -115,11 +152,43 @@ const submitted = () => {
     </FormSection>
 </template>
 
-<style scoped>
-img.preview {
+<style lang="scss" scoped>
+#logo-wrapper {
+    position: relative;
+
+    label#logo-label {
+        width: 100%;
+        border: 2px dashed #1f2937;
+        border-radius: 1.25rem;
+        padding: 1.25rem;
+        text-align: center;
+        display: block;
+
+        svg {
+            width: 30px;
+            margin-inline: auto;
+
+            path {
+                fill: #1f2937;
+            }
+        }
+    }
+
+    input {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: 100%;
+        opacity: 0;
+    }
+}
+
+img#preview {
     max-width: 90px;
     height: auto;
     display: block;
-    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 </style>

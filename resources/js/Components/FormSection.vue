@@ -13,6 +13,7 @@ const hasActions = computed(() => !! useSlots().actions);
             <template #title>
                 <slot name="title" />
             </template>
+
             <template #description>
                 <slot name="description" />
             </template>

@@ -64,4 +64,6 @@ Route::middleware([
 
     // Datas
     Route::post('/vaults/datas/create', [DataController::class, 'create'])->name('vaults.datas.create');
+    Route::post('/vaults/datas/decrypt', [DataController::class, 'decrypt'])->name('vaults.datas.decrypt');
+    Route::post('/vaults/datas/encrypt', [DataController::class, 'encrypt'])->name('vaults.datas.encrypt');
 });

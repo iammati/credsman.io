@@ -28,7 +28,7 @@ const form = useForm({
 });
 
 const submitted = () => {
-    alert('XD');
+    // ...
 };
 </script>
 
@@ -47,7 +47,7 @@ const submitted = () => {
             </template>
 
             <template #form>
-                <div class="col-span-6 sm:col-span-4">
+                <div class="col-span-6">
                     <VaultData :vault="vault" />
                 </div>
             </template>
