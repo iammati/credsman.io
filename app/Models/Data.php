@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Data extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,4 +18,9 @@ class Data extends Model
     protected $fillable = [
         'fields',
     ];
+
+    public function vault ()
+    {
+        return $this->belongsTo(Vault::class);
+    }
 }

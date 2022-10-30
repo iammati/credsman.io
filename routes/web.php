@@ -63,7 +63,12 @@ Route::middleware([
     Route::get('/vaults/show/{vault}', [VaultController::class, 'show'])->name('vaults.show');
 
     // Datas
+    Route::delete('/vaults/datas/delete', [DataController::class, 'destroy'])->name('vaults.datas.destroy');
     Route::post('/vaults/datas/create', [DataController::class, 'create'])->name('vaults.datas.create');
     Route::post('/vaults/datas/decrypt', [DataController::class, 'decrypt'])->name('vaults.datas.decrypt');
     Route::post('/vaults/datas/encrypt', [DataController::class, 'encrypt'])->name('vaults.datas.encrypt');
+    Route::post('/vaults/datas/groups/create', [DataController::class, 'createGroup'])->name('vaults.datas.groups.create');
+    Route::delete('/vaults/datas/groups/delete', [DataController::class, 'destroyGroup'])->name('vaults.datas.groups.destroy');
+    Route::post('/vaults/datas/groups/fields/create', [DataController::class, 'createField'])->name('vaults.datas.groups.fields.create');
+    Route::delete('/vaults/datas/groups/fields/delete', [DataController::class, 'destroyField'])->name('vaults.datas.groups.fields.destroy');
 });

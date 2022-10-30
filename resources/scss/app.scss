@@ -22,4 +22,14 @@ html {
             cursor: pointer;
         }
     }
+
+    .icon-hover {
+        padding: 5px;
+        border-radius: 50%;
+        transition: .3s;
+
+        &:hover {
+            background-color: #ddd;
+        }
+    }
 }

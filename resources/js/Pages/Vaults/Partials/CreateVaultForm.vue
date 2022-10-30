@@ -6,7 +6,6 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Inertia } from '@inertiajs/inertia';
-import NProgress from 'nprogress';
 
 const props = defineProps({
     vault: Object,
@@ -36,11 +35,8 @@ const logoInputEvent = e => {
 };
 
 Inertia.on('progress', (event) => {
-    console.log(event);
-    if (NProgress.isStarted() && event.detail.progress.percentage) {
-        NProgress.set((event.detail.progress.percentage / 100) * 0.9)
-    }
-})
+    console.log(event.detail.progress.percentage);
+});
 </script>
 
 <template>
@@ -96,8 +92,13 @@ Inertia.on('progress', (event) => {
                         </p>
                     </label>
 
-                    <div v-if="form.progress" className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                        <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" :width="form.progress.percentage"> {{ form.progress.percentage }}%</div>
+                    <div v-if="form.progress" class="mt-5 w-full bg-gray-200 rounded-full">
+                        <div
+                            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                            :width="form.progress.percentage"
+                        >
+                            {{ form.progress.percentage }}%
+                        </div>
                     </div>
 
                     <input

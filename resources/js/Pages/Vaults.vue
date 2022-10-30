@@ -47,8 +47,6 @@ defineProps({
                             <div class="text-end">
                                 <Link :href="route('vaults.create')">
                                     <PrimaryButton>
-                                        <PlusIcon class="h-4 w-4 text-white mr-2" />
-
                                         Create new vault
                                     </PrimaryButton>
                                 </Link>

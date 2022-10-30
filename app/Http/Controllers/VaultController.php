@@ -69,7 +69,11 @@ class VaultController extends Controller
     {
         // Encryption of the fields' values
         foreach ($vault->datas as $key => $data) {
-            $fields = json_decode($data->fields, true);
+            $fields = json_decode($data->fields, true) ?? null;
+
+            if ($fields === null) {
+                continue;
+            }
 
             foreach ($fields as $fieldKey => $field) {
                 foreach ($field as $fieldKeyIdentifier => $fieldValue) {

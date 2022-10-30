@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('vaults', function (Blueprint $table) {
+            $table->softDeletes();
             $table->id();
             $table->string('logo', 2048);
             $table->string('name');

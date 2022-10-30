@@ -9,7 +9,7 @@ defineProps({
 
 <template>
     <Link :href="route('vaults.show', { vault: vault })">
-        <div class="item flex w-full rounded-3xl shadow-lg border-b p-6 gap-4">
+        <div class="item flex w-full rounded-3xl shadow-lg border p-6 gap-4">
             <div class="flex items-center">
                 <img :src="`/storage/${vault.logo}`" alt="{{ vault.logo }}">
             </div>
