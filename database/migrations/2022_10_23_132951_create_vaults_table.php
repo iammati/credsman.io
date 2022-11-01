@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('vaults', function (Blueprint $table) {
             $table->softDeletes();
             $table->id();
-            $table->string('logo', 2048);
+            $table->string('logo', 2048)->nullable();
             $table->string('name');
             $table->string('url', 2048);
             $table->timestamps();

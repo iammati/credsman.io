@@ -1,9 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Vault from '@/Components/Vault.vue';
-import { PlusIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
 import { Link } from '@inertiajs/inertia-vue3';
 
 defineProps({

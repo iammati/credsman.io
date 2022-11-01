@@ -16,14 +16,13 @@ class VaultController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-    public function index(Request $request)
+    public function index ()
     {
         $vaults = Vault::get()->all();
 
-        return Jetstream::inertia()->render($request, 'Vaults', [
+        return Inertia::render('Vaults', [
             'vaults' => $vaults,
         ]);
     }
@@ -34,9 +33,9 @@ class VaultController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-    public function create(Request $request)
+    public function create ()
     {
-        return Jetstream::inertia()->render($request, 'Vaults/Create');
+        return Inertia::render('Vaults/Create');
     }
 
     /**
@@ -45,18 +44,23 @@ class VaultController extends Controller
      * @param  \App\Http\Requests\StoreVaultRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreVaultRequest $request)
+    public function store (StoreVaultRequest $request)
     {
         $vault = new Vault();
 
-        $vault->logo = $request->logo->storePublicly('logos', [
-            'disk' => 'public',
-        ]);
+        if ($request->logo) {
+            $vault->logo = $request->logo->storePublicly('logos', [
+                'disk' => 'public',
+            ]);
+        }
+
         $vault->name = $request->name;
         $vault->url = $request->url;
         $vault->save();
 
-        return redirect()->route('vaults');
+        return redirect()->route('vaults.show', [
+            'vault' => $vault,
+        ]);
     }
 
     /**
@@ -65,7 +69,7 @@ class VaultController extends Controller
      * @param  \App\Models\Vault  $vault
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Vault $vault)
+    public function show (Request $request, Vault $vault)
     {
         // Encryption of the fields' values
         foreach ($vault->datas as $key => $data) {
@@ -84,7 +88,7 @@ class VaultController extends Controller
             $vault->datas[$key]->fields = json_encode($fields);
         }
 
-        return Jetstream::inertia()->render($request, 'Vaults/Create', [
+        return Inertia::render('Vaults/Create', [
             'vault' => $vault,
         ])->with('datas', $vault->datas);
     }
@@ -95,7 +99,7 @@ class VaultController extends Controller
      * @param  \App\Models\Vault  $vault
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vault $vault)
+    public function edit (Vault $vault)
     {
         //
     }
@@ -107,7 +111,7 @@ class VaultController extends Controller
      * @param  \App\Models\Vault  $vault
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateVaultRequest $request, Vault $vault)
+    public function update (UpdateVaultRequest $request, Vault $vault)
     {
         $vault->update($request->validationData(), $request->all());
 
@@ -119,7 +123,7 @@ class VaultController extends Controller
             $vault->save();
         }
 
-        return redirect()->route('vaults');
+        // return redirect()->route('vaults');
     }
 
     /**
@@ -128,8 +132,10 @@ class VaultController extends Controller
      * @param  \App\Models\Vault  $vault
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vault $vault)
+    public function destroy (Vault $vault)
     {
-        //
+        $vault->delete();
+
+        return redirect()->route('vaults');
     }
 }

@@ -58,7 +58,10 @@ const logout = () => {
                                     Terms of service
                                 </NavLink> -->
 
-                                <NavLink :href="route('vaults')" :active="route().current('vaults')">
+                                <NavLink
+                                    :href="route('vaults')"
+                                    :active="$page.url.startsWith('/vaults')"
+                                >
                                     Vaults
                                 </NavLink>
                             </div>

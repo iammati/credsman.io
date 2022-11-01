@@ -5,7 +5,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Inertia } from '@inertiajs/inertia';
+import { defaultLogo } from '../../../Utility/DefaultLogo';
+import { notify } from '../../../Utility/Notify';
 
 const props = defineProps({
     vault: Object,
@@ -27,16 +28,18 @@ const submitted = () => {
         forceFormData: true,
         errorBag: `${action}Vault`,
         preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            if (action === 'update') {
+                notify('success', 'Vault updated', 'This vault has been successfully updated!');
+            }
+        }
     });
 };
 
 const logoInputEvent = e => {
     form.logo = e.target.files[0];
 };
-
-Inertia.on('progress', (event) => {
-    console.log(event.detail.progress.percentage);
-});
 </script>
 
 <template>
@@ -50,28 +53,17 @@ Inertia.on('progress', (event) => {
         </template>
 
         <template #form>
-            <div class="col-span-6">
-                <InputLabel value="Vault Owner" />
-
-                <div class="flex items-center mt-2">
-                    <img class="object-cover w-12 h-12 rounded-full" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
-
-                    <div class="ml-4 leading-tight">
-                        <div>
-                            {{ $page.props.user.name }}
-                        </div>
-
-                        <div class="text-sm text-gray-700">
-                            {{ $page.props.user.email }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="logo" value="Vault Logo" />
 
-                <img v-if="vault" :src="`/storage/${vault.logo}`" :alt="`${vault.logo}`" id="preview">
+                <template v-if="vault">
+                    <img
+                        :src="vault.logo ? `/storage/${vault.logo}` : defaultLogo(props)"
+                        :alt="vault.logo ? `${vault.logo}` : 'Vault Logo'"
+                        id="preview"
+                        class="object-cover rounded-full mt-2"
+                    >
+                </template>
 
                 <div id="logo-wrapper">
                     <label for="logo" id="logo-label" class="mt-1">

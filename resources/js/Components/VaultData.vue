@@ -7,8 +7,9 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import Accordion from '@/Components/Accordion.vue';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import { notify } from '../Utility/Notify';
 
 const props = defineProps({
     vault: Object,
@@ -57,15 +58,15 @@ const addField = (dataId) => {
 
     console.log(fieldForm.key, fieldForm.value);
 
-    // fieldForm.post(route('vaults.datas.groups.fields.create', {
-    //     dataId: dataId,
-    //     key: key,
-    //     value: value,
-    // }), {
-    //     preserveScroll: true,
-    //     preserveState: true,
-    //     onSuccess: () => (fieldForm.reset()),
-    // });
+    fieldForm.post(route('vaults.datas.groups.fields.create', {
+        dataId: dataId,
+        key: key,
+        value: value,
+    }), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => (fieldForm.reset()),
+    });
 };
 
 const groupForm = useForm({
@@ -77,7 +78,10 @@ const addGroup = () => {
     groupForm.post(route('vaults.datas.groups.create'), {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => (groupForm.reset('name')),
+        onSuccess: () => {
+            notify('success', `Created new group „${groupForm.name}“`);
+            groupForm.reset('name');
+        },
     });
 };
 

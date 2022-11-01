@@ -156,11 +156,11 @@ class DataController extends Controller
         $data = Data::where('id', (int) $request->dataId)->first();
         $fields = json_decode($data->fields, true) ?? [];
 
-        dd($request->key, $request->value);
+        // dd($request->key, $request->value);
 
         [ $key, $value ] = [
-            $request->key[1],
-            $request->value[1],
+            $request->key[$data->id],
+            $request->value[$data->id],
         ];
 
         $fields[] = [

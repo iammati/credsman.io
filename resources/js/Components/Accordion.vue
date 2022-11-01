@@ -7,6 +7,7 @@ import { ref } from 'vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import { notify } from '../Utility/Notify';
 
 const props = defineProps({
     vaultId: Number,
@@ -36,18 +37,21 @@ const toggle = e => {
 const groupBeingDeleted = ref(null);
 const deleteGroupForm = useForm();
 
-const confirmGroupDeletion = (e, token) => {
+const confirmGroupDeletion = (e, data) => {
     e.stopImmediatePropagation() && e.preventDefault();
-    groupBeingDeleted.value = token;
+    groupBeingDeleted.value = data;
 };
 
 const deleteGroup = () => {
     deleteGroupForm.delete(route('vaults.datas.groups.destroy', {
-        dataId: groupBeingDeleted.value,
+        dataId: groupBeingDeleted.value.id,
     }), {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => (groupBeingDeleted.value = null),
+        onSuccess: () => {
+            notify('info', `Deleted group „${groupBeingDeleted.value.group_name}“`);
+            groupBeingDeleted.value = null;
+        },
     });
 };
 </script>
@@ -69,7 +73,7 @@ const deleteGroup = () => {
                     </div>
 
                     <div
-                        @click="confirmGroupDeletion($event, data.id)"
+                        @click="confirmGroupDeletion($event, data)"
                         class="delete icon-hover"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">

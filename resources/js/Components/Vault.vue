@@ -1,17 +1,22 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+import { defaultLogo } from '../Utility/DefaultLogo';
 
-defineProps({
+const props = defineProps({
     vault: Object,
     last: Boolean,
 });
 </script>
 
 <template>
-    <Link :href="route('vaults.show', { vault: vault })">
-        <div class="item flex w-full rounded-3xl shadow-lg border p-6 gap-4">
+    <Link :href="route('vaults.show', { vault: vault })" class="mb-4 block">
+        <div class="item hover:bg-gray-50 flex w-full rounded-3xl shadow-lg border p-4 gap-4">
             <div class="flex items-center">
-                <img :src="`/storage/${vault.logo}`" alt="{{ vault.logo }}">
+                <img
+                    :src="vault.logo ? `/storage/${vault.logo}` : defaultLogo(props)"
+                    :alt="vault.logo ? vault.logo : 'Vault Logo'"
+                    class="object-cover rounded-full"
+                >
             </div>
 
             <div class="flex items-center">
@@ -47,6 +52,4 @@ img {
 .item:not(:last-child) {
     margin-bottom: 1rem;
 }
-
-/* #1D9BF0 */
 </style>
