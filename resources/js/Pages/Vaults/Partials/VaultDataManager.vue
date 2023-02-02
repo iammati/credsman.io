@@ -9,6 +9,7 @@ import { notify } from '../../../Utility/Notify';
 
 const props = defineProps({
     vault: Object,
+    readOnly: Boolean,
 });
 
 const form = useForm({
@@ -19,17 +20,49 @@ const form = useForm({
 });
 
 const saveGroups = () => {
-    console.log(props.vault.datas);
-    notify('success', 'ah!!');
+    form.processing = true;
+
+    const payload = [];
+    const { datas } = props.vault;
+
+    const nodes = document.querySelectorAll('#data-blocks > .data[data-id]');
+    for (const node of nodes) {
+        const fields = {};
+
+        for (const fieldNode of node.querySelectorAll('.field')) {
+            fields[fieldNode.querySelector('.key input').value] = fieldNode.dataset.value;
+        }
+
+        payload.push({
+            id: node.dataset.id,
+            group_name: node.querySelector('.group-name').value,
+            fields: JSON.stringify(fields),
+        });
+    }
+
+    axios.post(route('vaults.datas.update'), {
+        datas: payload,
+    }).then(() => {
+        form.processing = false;
+        notify('success', 'Vault Data Manager – saved.');
+    }).catch(error => {
+        form.processing = false;
+        form.error = error.response.data;
+        notify('error', 'Vault Data Manager – failed!', 'An error occurred while saving this vault\'s data!');
+    });
 };
 </script>
 
 <template>
-    <div v-if="vault">
+    <div v-if="readOnly">
+        <VaultData :vault="vault" :readOnly="readOnly" />
+    </div>
+
+    <div v-else-if="vault">
         <SectionBorder />
 
         <!-- Vault Data Manager -->
-        <FormSection @submitted="saveGroups">
+        <FormSection>
             <template #title>
                 Vault Data Manager
             </template>
@@ -40,7 +73,7 @@ const saveGroups = () => {
 
             <template #form>
                 <div class="col-span-6">
-                    <VaultData :vault="vault" />
+                    <VaultData :vault="vault" :readOnly="readOnly" />
                 </div>
             </template>
 
@@ -49,7 +82,11 @@ const saveGroups = () => {
                     Saved.
                 </ActionMessage>
 
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click="saveGroups"
+                >
                     Save
                 </PrimaryButton>
             </template>

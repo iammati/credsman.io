@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-    <p style="font-family: Playfair Display;">
+    <p>
         <span v-if="appNameExtended">
             {{ appNameExtended }} |
         </span>
@@ -19,5 +19,6 @@ p {
     font-family: Playfair Display;
     margin-bottom: 0;
     font-weight: bold;
+    font-size: 22px;
 }
 </style>

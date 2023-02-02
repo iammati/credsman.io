@@ -1,4 +1,5 @@
 {
+    "name": "@iammati/credsman.io",
     "private": true,
     "version": "0.1.0",
     "author": {
@@ -15,31 +16,32 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
+        "@inertiajs/vue3": "^1.0.0",
         "@tailwindcss/forms": "^0.5.3",
-        "@tailwindcss/typography": "^0.5.7",
-        "@vitejs/plugin-vue": "^3.2.0",
+        "@tailwindcss/typography": "^0.5.9",
+        "@vitejs/plugin-vue": "^4.0.0",
         "autoprefixer": "^10.4.13",
-        "axios": "^1.1.3",
-        "laravel-vite-plugin": "^0.7.0",
+        "axios": "^1.3.1",
+        "laravel-vite-plugin": "^0.7.3",
         "lodash": "^4.17.21",
-        "postcss": "^8.4.18",
-        "tailwindcss": "^3.2.1",
-        "vite": "^3.2.2",
-        "vue": "^3.2.41"
+        "postcss": "^8.4.21",
+        "tailwindcss": "^3.2.4",
+        "vite": "^4.1.1",
+        "vue": "^3.2.47"
     },
     "dependencies": {
-        "@commitlint/cli": "^17.2.0",
-        "@commitlint/config-conventional": "^17.2.0",
-        "@commitlint/cz-commitlint": "^17.2.0",
-        "@commitlint/prompt-cli": "^17.2.0",
-        "@heroicons/vue": "^2.0.12",
-        "commitizen": "^4.2.5",
+        "@commitlint/cli": "^17.4.2",
+        "@commitlint/config-conventional": "^17.4.2",
+        "@commitlint/cz-commitlint": "^17.4.2",
+        "@commitlint/prompt-cli": "^17.4.2",
+        "@heroicons/vue": "^2.0.14",
+        "commitizen": "^4.3.0",
         "conventional-changelog-conventionalcommits": "^5.0.0",
         "dotenv": "^16.0.3",
         "inquirer": "^8.2.5",
-        "lint-staged": "^13.0.3",
-        "sass": "^1.55.0",
-        "sweetalert2": "^11.6.5"
+        "lint-staged": "^13.1.0",
+        "sass": "^1.58.0",
+        "sweetalert2": "^11.7.1"
     },
     "config": {
         "commitizen": {

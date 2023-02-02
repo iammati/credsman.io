@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDataRequest;
 use App\Models\Data;
 use App\Models\Vault;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 
 class DataController extends Controller
@@ -68,12 +69,26 @@ class DataController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateDataRequest  $request
-     * @param  \App\Models\Data  $data
+     * @param  \Illuminate\Support\Collection  $data
      * @return \Illuminate\Http\Response
      */
-    public function update (UpdateDataRequest $request, Data $data)
+    public function update(UpdateDataRequest $request, Collection $datas)
     {
-        //
+        $datas = $request->datas;
+        $dataIds = collect($datas)->pluck('id');
+
+        foreach ($dataIds as $id) {
+            $id = (int)$id;
+            $data = Data::find($id);
+
+            foreach ($datas as $payloadedData) {
+                if ($id === (int)$payloadedData['id']) {
+                    $data->group_name = $payloadedData['group_name'];
+                    $data->fields = $payloadedData['fields'];
+                    $data->save();
+                }
+            }
+        }
     }
 
     /**
@@ -87,7 +102,7 @@ class DataController extends Controller
         $vault = Vault::where('id', (int) $request->vaultId)->first();
         $data->delete();
 
-        return redirect()->route('vaults.show', [
+        return redirect()->route('vaults.edit', [
             'vault' => $vault,
         ]);
     }
@@ -127,7 +142,7 @@ class DataController extends Controller
         $data->group_name = $request->name;
         $data->save();
 
-        return redirect()->route('vaults.show', [
+        return redirect()->route('vaults.edit', [
             'vault' => $vault,
         ]);
     }
@@ -142,7 +157,7 @@ class DataController extends Controller
         $vault = $data->vault;
         $data->delete();
 
-        return redirect()->route('vaults.show', [
+        return redirect()->route('vaults.edit', [
             'vault' => $vault,
         ]);
     }
@@ -153,25 +168,18 @@ class DataController extends Controller
      */
     public function createField (Request $request)
     {
-        $data = Data::where('id', (int) $request->dataId)->first();
+        $data = Data::where('id', (int)$request->dataId)->first();
         $fields = json_decode($data->fields, true) ?? [];
 
-        // dd($request->key, $request->value);
-
-        [ $key, $value ] = [
-            $request->key[$data->id],
-            $request->value[$data->id],
-        ];
-
-        $fields[] = [
-            $key => $value,
-        ];
+        $key = $request->key;
+        $value = $request->value;
+        $fields[$key] = $value;
 
         $fields = json_encode($fields);
         $data->fields = $fields;
         $data->save();
 
-        return redirect()->route('vaults.show', [
+        return redirect()->route('vaults.edit', [
             'vault' => $data->vault,
         ]);
     }
@@ -186,20 +194,18 @@ class DataController extends Controller
         $key = $request->data['key'];
         $fields = json_decode($data->fields, true) ?? [];
 
-        foreach ($fields as $i => $field) {
-            foreach ($field as $fieldKeyIdentifier => $fieldValue) {
-                if ($fieldKeyIdentifier !== $key) {
-                    continue;
-                }
-
-                unset($fields[$i]);
+        foreach ($fields as $fieldKeyIdentifier => $field) {
+            if ($fieldKeyIdentifier !== $key) {
+                continue;
             }
+
+            unset($fields[$fieldKeyIdentifier]);
         }
 
         $data->fields = json_encode($fields);
         $data->save();
 
-        return redirect()->route('vaults.show', [
+        return redirect()->route('vaults.edit', [
             'vault' => $data->vault,
         ]);
     }

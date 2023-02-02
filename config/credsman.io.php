@@ -15,4 +15,8 @@ return [
 
     'app_name_extended' => 'Schommer Media',
 
+    'admin_emails' => [
+        'mati_01@icloud.com',
+    ],
+
 ];

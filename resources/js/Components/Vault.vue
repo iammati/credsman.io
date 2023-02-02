@@ -1,6 +1,9 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 import { defaultLogo } from '../Utility/DefaultLogo';
+import { EyeIcon, PencilIcon } from '@heroicons/vue/24/solid';
+import PrimaryButton from './PrimaryButton.vue';
+import SecondaryButton from './SecondaryButton.vue';
 
 const props = defineProps({
     vault: Object,
@@ -9,44 +12,54 @@ const props = defineProps({
 </script>
 
 <template>
-    <Link :href="route('vaults.show', { vault: vault })" class="mb-4 block">
-        <div class="item hover:bg-gray-50 flex w-full rounded-3xl shadow-lg border p-4 gap-4">
-            <div class="flex items-center">
-                <img
-                    :src="vault.logo ? `/storage/${vault.logo}` : defaultLogo(props)"
-                    :alt="vault.logo ? vault.logo : 'Vault Logo'"
-                    class="object-cover rounded-full"
-                >
-            </div>
+    <div class="item flex w-full rounded-lg shadow-lg border p-4 gap-4">
+        <div class="flex items-center" style="min-width: 50px;">
+            <img
+                :src="vault.logo ? `/storage/${vault.logo}` : defaultLogo(props)"
+                :alt="vault.logo ? vault.logo : 'Vault Logo'"
+                class="object-cover rounded-full"
+                style="width: 70px;"
+            >
+        </div>
 
-            <div class="flex items-center">
-                <div>
-                    <p>
+        <div class="flex items-center w-full">
+            <div>
+                <p>
+                    {{ vault.name }}
+                </p>
+
+                <p class="text-gray-400 hover:underline">
+                    <a :href="vault.url" target="_blank">
                         {{ vault.url }}
-                    </p>
-
-                    <p class="text-gray-400">
-                        {{ vault.name }}
-                    </p>
-                </div>
+                    </a>
+                </p>
             </div>
         </div>
-    </Link>
+
+        <div class="flex items-center w-full justify-end" style="gap: 8px;">
+            <Link :href="route('vaults.edit', { vault: vault })">
+                <SecondaryButton class="px-2">
+                    <PencilIcon class="w-5 h-5" />
+                </SecondaryButton>
+            </Link>
+
+            <Link :href="route('vaults.show', { vault: vault })">
+                <PrimaryButton class="px-2">
+                    <EyeIcon class="w-5 h-5" />
+                </PrimaryButton>
+            </Link>
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
 svg,
 img {
-    width: 70px;
     height: auto;
 
     path {
         fill: #1D9BF0;
     }
-}
-
-.item {
-    cursor: pointer;
 }
 
 .item:not(:last-child) {

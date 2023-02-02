@@ -13,26 +13,34 @@ import { notify } from '../Utility/Notify';
 
 const props = defineProps({
     vault: Object,
+    readOnly: Boolean,
 });
 
 const encrypt = e => {
     const button = e.currentTarget;
     const state = button.parentNode.parentNode;
     const input = state.querySelector('.value input');
-    const { value } = input.dataset;
+    const value = input.value;
 
     axios.post(route('vaults.datas.encrypt'), {
         value: value,
     }).then(response => {
+        const { data } = response;
+
         input.value = 'Value encrypted';
         state.dataset.state = 'decrypted';
+        state.dataset.value = data;
     });
 };
 
 const decrypt = e => {
     const input = e.currentTarget;
     const state = input.parentNode.parentNode;
-    const { value } = input.dataset;
+    const value = state.dataset.value;
+
+    if (state.dataset.state === 'encrypted') {
+        return false;
+    }
 
     axios.post(route('vaults.datas.decrypt'), {
         value: value,
@@ -41,6 +49,7 @@ const decrypt = e => {
 
         input.value = data;
         state.dataset.state = 'encrypted';
+        state.dataset.value = data;
     });
 };
 
@@ -56,16 +65,14 @@ const addField = (dataId) => {
         fieldForm.value[dataId],
     ];
 
-    console.log(fieldForm.key, fieldForm.value);
+    fieldForm.key = key;
+    fieldForm.value = value;
+    fieldForm.dataId = dataId;
 
-    fieldForm.post(route('vaults.datas.groups.fields.create', {
-        dataId: dataId,
-        key: key,
-        value: value,
-    }), {
+    fieldForm.post(route('vaults.datas.groups.fields.create'), {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => (fieldForm.reset()),
+        onSuccess: () => (fieldForm.reset() && console.log(fieldForm)),
     });
 };
 
@@ -75,6 +82,10 @@ const groupForm = useForm({
 });
 
 const addGroup = () => {
+    if (groupForm.name.length === 0) {
+        return notify('error', 'Group name cannot be empty!');
+    }
+
     groupForm.post(route('vaults.datas.groups.create'), {
         preserveScroll: true,
         preserveState: true,
@@ -104,47 +115,140 @@ const deleteField = () => {
         onSuccess: () => (fieldBeingDeleted.value = null),
     });
 };
+
+const copy2Clipboard = async (text, decrypt = false) => {
+    if (decrypt) {
+        notify('info', `Requested to decrypt...`);
+
+        return await axios.post(route('vaults.datas.decrypt'), {
+            value: text,
+        }).then(async response => {
+            const { data } = response;
+
+            await navigator.clipboard.writeText(data);
+
+            return notify('success', `Saved decrypted value into clipboard`);
+        });
+    }
+
+    await navigator.clipboard.writeText(text);
+
+    notify('info', `Copied <i>${text}</i> to clipboard`);
+};
 </script>
 
 <template>
-    <InputLabel for="group-name" value="Group Name" />
+    <InputLabel v-if="!readOnly" for="group-name" value="Group Name" />
 
     <TextInput
+        v-if="!readOnly"
         v-model="groupForm.name"
         id="group-name"
         type="text"
         class="mt-1 block w-full"
     />
 
-    <div class="flex justify-end mt-4 mb-4">
+    <div v-if="!readOnly" class="flex justify-end mt-4 mb-4">
         <PrimaryButton @click="addGroup">
             Add group
         </PrimaryButton>
     </div>
 
-    <hr class="my-8 block">
+    <hr v-if="!readOnly" class="my-8 block">
 
-    <template v-for="data, index in vault.datas" :key="index">
-        <div class="data mt-4 shadow-md border rounded-lg">
-            <Accordion :vaultId="vault.id" :data="data">
-                <template #head :class="p-3">
-                    <input
-                        type="text"
-                        :value="data.group_name"
-                        class="py-0 pl-0 font-bold w-max"
-                        @click="$event.stopImmediatePropagation();"
-                    />
-                </template>
+    <div id="data-blocks">
+        <template v-for="data, index in vault.datas" :key="index">
+            <div class="data mt-4 shadow-md border rounded-lg" :data-id="data.id">
+                <Accordion :vaultId="vault.id" :data="data" :readOnly="readOnly">
+                    <template #head :class="p-3">
+                        <input
+                            v-if="!readOnly"
+                            type="text"
+                            :value="data.group_name"
+                            class="group-name py-0 pl-0 font-bold w-max"
+                            @click="$event.stopImmediatePropagation();"
+                        />
 
-                <template #body>
-                    <template v-for="row in JSON.parse(data.fields)" :key="row">
-                        <template v-for="value, key in row" :key="key">
-                            <div class="state flex mb-2" data-state="decrypted">
+                        <p v-else>
+                            <b>{{ data.group_name }}</b>
+                        </p>
+                    </template>
+
+                    <template #body>
+                        <template v-for="value, key in JSON.parse(data.fields)" :key="key">
+                            <div class="field state flex mb-2" data-state="decrypted" :data-value="value">
+                                <template v-if="readOnly">
+                                    <div class="grid grid-cols-2 gap-4 readonly flex items-center" style="gap: 8px;">
+                                        <p @click="copy2Clipboard(key)" class="cursor-pointer">
+                                            {{ key }}
+                                        </p>
+
+                                        <a class="block" @click="copy2Clipboard(value, true)">
+                                            <input
+                                                type="password"
+                                                :value="value"
+                                                class="p-0 cursor-pointer"
+                                                disabled
+                                            />
+                                        </a>
+                                    </div>
+                                </template>
+
+                                <template v-else>
+                                    <div class="key flex">
+                                        <input
+                                            type="text"
+                                            v-bind:value="key"
+                                            class="key pl-0"
+                                        />
+
+                                        <span class="icon">
+                                            =
+                                        </span>
+                                    </div>
+
+                                    <div class="value">
+                                        <input
+                                            @click="decrypt"
+                                            type="text"
+                                            value="Value encrypted"
+                                        />
+                                    </div>
+
+                                    <div class="button">
+                                        <SecondaryButton @click="encrypt">
+                                            <LockClosedIcon class="w-5 h-5 mr-2" />
+
+                                            <span>
+                                                Encrypt
+                                            </span>
+                                        </SecondaryButton>
+                                    </div>
+
+                                    <div class="close">
+                                        <div
+                                            @click="confirmFieldDeletion(data.id, key)"
+                                            class="icon-hover"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <hr class="mt-2">
+
+                        <form @submit.prevent="addField(data.id)">
+                            <div v-if="!readOnly" class="flex mt-3">
                                 <div class="key flex">
                                     <input
+                                        v-model="fieldForm.key[data.id]"
                                         type="text"
-                                        :value="key"
                                         class="key pl-0"
+                                        placeholder="Label"
                                     />
 
                                     <span class="icon">
@@ -152,75 +256,26 @@ const deleteField = () => {
                                     </span>
                                 </div>
 
-                                <div class="value">
+                                <div class="value flex">
                                     <input
-                                        @click="decrypt"
-                                        :data-value="value"
+                                        v-model="fieldForm.value[data.id]"
                                         type="text"
-                                        value="Value encrypted"
+                                        placeholder="Value"
                                     />
                                 </div>
 
-                                <div class="button">
-                                    <SecondaryButton @click="encrypt" :data-value="value">
-                                        <LockClosedIcon class="w-5 h-5 mr-2" />
-
-                                        <span>
-                                            Encrypt
-                                        </span>
+                                <div v-if="!readOnly" class="flex justify-end w-full">
+                                    <SecondaryButton @click="addField(data.id)" class="my-5">
+                                        Add field
                                     </SecondaryButton>
                                 </div>
-
-                                <div class="close">
-                                    <div
-                                        @click="confirmFieldDeletion(data.id, key)"
-                                        class="icon-hover"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
-                        </template>
+                        </form>
                     </template>
-
-                    <hr class="mt-2">
-
-                    <form @submit.prevent="addField(data.id)">
-                        <div class="flex mt-3">
-                            <div class="key flex">
-                                <input
-                                    v-model="fieldForm.key[data.id]"
-                                    type="text"
-                                    class="key pl-0"
-                                    placeholder="Key / Identifier"
-                                />
-
-                                <span class="icon">
-                                    =
-                                </span>
-                            </div>
-
-                            <div class="value flex">
-                                <input
-                                    v-model="fieldForm.value[data.id]"
-                                    type="text"
-                                    placeholder="Value"
-                                />
-                            </div>
-
-                            <div class="flex justify-end w-full">
-                                <SecondaryButton @click="addField(data.id)" class="my-5">
-                                    Add field
-                                </SecondaryButton>
-                            </div>
-                        </div>
-                    </form>
-                </template>
-            </Accordion>
-        </div>
-    </template>
+                </Accordion>
+            </div>
+        </template>
+    </div>
 
     <ConfirmationModal :show="fieldBeingDeleted != null" @close="fieldBeingDeleted = null">
         <template #title>
@@ -291,6 +346,18 @@ const deleteField = () => {
 
     > div {
         cursor: pointer;
+    }
+}
+
+.field.state > div {
+    > p,
+    > a {
+        border: 2px solid transparent;
+        border-radius: 5px;
+
+        &:hover {
+            border-color: #000;
+        }
     }
 }
 </style>

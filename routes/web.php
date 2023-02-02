@@ -4,8 +4,10 @@ use App\Credsman;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\VaultController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Jetstream\Team;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +22,12 @@ use Inertia\Inertia;
 
 // Startpage - redirects to /dashboard
 Route::get('/', function () {
+    $isAdmin = Auth::user()?->isAdmin();
+
+    if (! $isAdmin) {
+        return redirect()->route('vaults');
+    }
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -45,8 +53,14 @@ Route::middleware([
 
     // Dashboard
     Route::get('/dashboard', function () use ($data) {
-        return Inertia::render('Dashboard', array_merge($data, [
+        $isAdmin = Auth::user()->isAdmin();
 
+        if (!$isAdmin) {
+            return redirect()->route('vaults');
+        }
+
+        return Inertia::render('Dashboard', array_merge($data, [
+            'isAdmin' => $isAdmin,
         ]));
     })->name('dashboard');
 
@@ -61,6 +75,7 @@ Route::middleware([
     Route::get('/vaults/create', [VaultController::class, 'create'])->name('vaults.create');
     Route::post('/vaults/store', [VaultController::class, 'store'])->name('vaults.store');
     Route::any('/vaults/update/{vault}', [VaultController::class, 'update'])->name('vaults.update');
+    Route::get('/vaults/edit/{vault}', [VaultController::class, 'edit'])->name('vaults.edit');
     Route::get('/vaults/show/{vault}', [VaultController::class, 'show'])->name('vaults.show');
 
     // Vaults->Datas
@@ -68,6 +83,7 @@ Route::middleware([
     Route::post('/vaults/datas/create', [DataController::class, 'create'])->name('vaults.datas.create');
     Route::post('/vaults/datas/decrypt', [DataController::class, 'decrypt'])->name('vaults.datas.decrypt');
     Route::post('/vaults/datas/encrypt', [DataController::class, 'encrypt'])->name('vaults.datas.encrypt');
+    Route::any('/vaults/datas/update', [DataController::class, 'update'])->name('vaults.datas.update');
 
     // Vaults->Datas->Groups
     Route::post('/vaults/datas/groups/create', [DataController::class, 'createGroup'])->name('vaults.datas.groups.create');

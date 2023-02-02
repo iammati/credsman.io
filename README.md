@@ -1,6 +1,6 @@
 # @iammati/credsman.io
 
-Credsman.io is an open-source, easy and modern password manager.
+Credsman.io is an open-source, easy, (good-looking btw), and modern password manager.
 
 ## Why?
 
