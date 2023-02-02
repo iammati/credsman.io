@@ -150,7 +150,11 @@ class VaultController extends Controller
             $vault->save();
         }
 
-        // return redirect()->route('vaults');
+        return redirect()->route('vaults.edit', [
+            'vault' => $vault,
+            'isAdmin' => Auth::user()->isAdmin(),
+            'copyright' => Credsman::getCopyright(),
+        ]);
     }
 
     /**

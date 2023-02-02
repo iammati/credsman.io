@@ -75,7 +75,7 @@ Route::middleware([
     Route::get('/vaults/create', [VaultController::class, 'create'])->name('vaults.create');
     Route::post('/vaults/store', [VaultController::class, 'store'])->name('vaults.store');
     Route::any('/vaults/update/{vault}', [VaultController::class, 'update'])->name('vaults.update');
-    Route::get('/vaults/edit/{vault}', [VaultController::class, 'edit'])->name('vaults.edit');
+    Route::any('/vaults/edit/{vault}', [VaultController::class, 'edit'])->name('vaults.edit');
     Route::get('/vaults/show/{vault}', [VaultController::class, 'show'])->name('vaults.show');
 
     // Vaults->Datas

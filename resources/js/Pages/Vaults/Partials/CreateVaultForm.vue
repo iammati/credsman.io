@@ -113,7 +113,6 @@ const logoInputEvent = e => {
                     v-model="form.name"
                     type="text"
                     class="block w-full mt-1"
-                    autofocus
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>

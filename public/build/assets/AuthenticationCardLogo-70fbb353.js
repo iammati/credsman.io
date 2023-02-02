@@ -1,1 +1,0 @@
-import{L as o}from"./index-11e47354.js";import{A as t}from"./ApplicationLogo-8cb848bb.js";import{o as a,c as e,w as r,b as s,u as c}from"./app-5639a22b.js";const u={__name:"AuthenticationCardLogo",setup(n){return(i,p)=>(a(),e(c(o),{href:"/dashboard"},{default:r(()=>[s(t,{style:{"font-size":"30px"}})]),_:1}))}};export{u as _};
