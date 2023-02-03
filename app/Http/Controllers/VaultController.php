@@ -79,20 +79,20 @@ class VaultController extends Controller
      */
     public function edit (Request $request, Vault $vault)
     {
-        // // Encryption of the fields' values
-        // foreach ($vault->datas as $key => $data) {
-        //     $fields = json_decode($data->fields, true) ?? null;
+        // Encryption of the fields' values
+        foreach ($vault->datas as $key => $data) {
+            $fields = json_decode($data->fields, true) ?? null;
 
-        //     if ($fields === null) {
-        //         continue;
-        //     }
+            if ($fields === null) {
+                continue;
+            }
 
-        //     foreach ($fields as $fieldKey => $field) {
-        //         $fields[$fieldKey] = Crypt::encrypt($field);
-        //     }
+            foreach ($fields as $fieldKey => $field) {
+                $fields[$fieldKey] = Crypt::encrypt($field);
+            }
 
-        //     $vault->datas[$key]->fields = json_encode($fields);
-        // }
+            $vault->datas[$key]->fields = json_encode($fields);
+        }
 
         return Inertia::render('Vaults/Create', [
             'vault' => $vault,
@@ -109,20 +109,20 @@ class VaultController extends Controller
      */
     public function show (Vault $vault)
     {
-        // // Encryption of the fields' values
-        // foreach ($vault->datas as $key => $data) {
-        //     $fields = json_decode($data->fields, true) ?? null;
+        // Encryption of the fields' values
+        foreach ($vault->datas as $key => $data) {
+            $fields = json_decode($data->fields, true) ?? null;
 
-        //     if ($fields === null) {
-        //         continue;
-        //     }
+            if ($fields === null) {
+                continue;
+            }
 
-        //     foreach ($fields as $fieldKey => $field) {
-        //         $fields[$fieldKey] = Crypt::encrypt($field);
-        //     }
+            foreach ($fields as $fieldKey => $field) {
+                $fields[$fieldKey] = Crypt::encrypt($field);
+            }
 
-        //     $vault->datas[$key]->fields = json_encode($fields);
-        // }
+            $vault->datas[$key]->fields = json_encode($fields);
+        }
 
         return Inertia::render('Vaults/Show', [
             'vault' => $vault,
