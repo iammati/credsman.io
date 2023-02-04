@@ -25,8 +25,6 @@ class VaultController extends Controller
 
         return Inertia::render('Vaults', [
             'vaults' => $vaults,
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
         ]);
     }
 
@@ -38,10 +36,7 @@ class VaultController extends Controller
      */
     public function create ()
     {
-        return Inertia::render('Vaults/Create', [
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
-        ]);
+        return Inertia::render('Vaults/Create');
     }
 
     /**
@@ -66,8 +61,6 @@ class VaultController extends Controller
 
         return redirect()->route('vaults.edit', [
             'vault' => $vault,
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
         ]);
     }
 
@@ -96,8 +89,6 @@ class VaultController extends Controller
 
         return Inertia::render('Vaults/Create', [
             'vault' => $vault,
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
         ])->with('datas', $vault->datas);
     }
 
@@ -126,8 +117,6 @@ class VaultController extends Controller
 
         return Inertia::render('Vaults/Show', [
             'vault' => $vault,
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
         ])->with('datas', $vault->datas);
     }
 
@@ -152,8 +141,6 @@ class VaultController extends Controller
 
         return redirect()->route('vaults.edit', [
             'vault' => $vault,
-            'isAdmin' => Auth::user()->isAdmin(),
-            'copyright' => Credsman::getCopyright(),
         ]);
     }
 
