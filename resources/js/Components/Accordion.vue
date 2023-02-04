@@ -2,7 +2,7 @@
 import { ChevronDownIcon } from '@heroicons/vue/24/solid';
 import SlideToggle from '../Animations/SlideToggle';
 import GetElementPosition from '../Utility/GetElementPosition';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -36,7 +36,7 @@ const toggle = e => {
 };
 
 const groupBeingDeleted = ref(null);
-const deleteGroupForm = useForm();
+// const deleteGroupForm = useForm();
 
 const confirmGroupDeletion = (e, data) => {
     e.stopImmediatePropagation() && e.preventDefault();
@@ -44,7 +44,7 @@ const confirmGroupDeletion = (e, data) => {
 };
 
 const deleteGroup = () => {
-    deleteGroupForm.delete(route('vaults.datas.groups.destroy', {
+    router.delete(route('vaults.datas.groups.destroy', {
         dataId: groupBeingDeleted.value.id,
     }), {
         preserveScroll: true,

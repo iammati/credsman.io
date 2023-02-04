@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Vault from '@/Components/Vault.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
     vaults: Array,
@@ -17,10 +17,10 @@ defineProps({
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200 relative">
+                <div class="bg-white overflow-hidden shadow-xl rounded-lg dark:bg-gray-800">
+                    <div class="p-6 bg-white border-b border-gray-200 relative dark:bg-gray-800">
                         <div class="md:grid md:grid-cols-2 md:gap-6">
                             <template v-if="vaults.length > 0">
                                 <div>

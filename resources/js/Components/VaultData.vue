@@ -2,7 +2,7 @@
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -97,7 +97,7 @@ const addGroup = () => {
 };
 
 const fieldBeingDeleted = ref(null);
-const deleteFieldForm = useForm();
+// const deleteFieldForm = useForm();
 
 const confirmFieldDeletion = (dataId, key) => {
     fieldBeingDeleted.value = {
@@ -107,7 +107,7 @@ const confirmFieldDeletion = (dataId, key) => {
 };
 
 const deleteField = () => {
-    deleteFieldForm.delete(route('vaults.datas.groups.fields.destroy', {
+    router.delete(route('vaults.datas.groups.fields.destroy', {
         data: fieldBeingDeleted.value,
     }), {
         preserveScroll: true,

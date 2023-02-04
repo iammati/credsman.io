@@ -3,11 +3,9 @@
 use App\Credsman;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\VaultController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Jetstream\Team;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,19 +22,22 @@ use Laravel\Jetstream\Team;
 Route::get('/', function () {
     $isAdmin = Auth::user()?->isAdmin();
 
-    if (! $isAdmin) {
+    if ($isAdmin === false) {
         return redirect()->route('vaults');
     }
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'appVersion' => Credsman::VERSION,
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-        'appNameExtended' => config('credsman.io')['app_name_extended'] ?? null,
     ]);
 });
+
+Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->middleware([
+        'guest:' . config('fortify.guard'),
+        ''
+    ])
+    ->name('register');
 
 // Admin UI
 Route::middleware([
@@ -47,6 +48,7 @@ Route::middleware([
     $data = [
         'appVersion' => Credsman::VERSION,
         'phpVersion' => PHP_VERSION,
+        'productName' => config('credsman.io')['product_name'] ?? null,
         'appNameExtended' => config('credsman.io')['app_name_extended'] ?? null,
         'copyright' => Credsman::getCopyright(),
     ];

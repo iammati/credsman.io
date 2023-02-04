@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import ActionSection from '@/Components/ActionSection.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -11,14 +11,14 @@ const props = defineProps({
 });
 
 const confirmingTeamDeletion = ref(false);
-const form = useForm();
+// const form = useForm();
 
 const confirmTeamDeletion = () => {
     confirmingTeamDeletion.value = true;
 };
 
 const deleteTeam = () => {
-    form.delete(route('teams.destroy', props.team), {
+    router.delete(route('teams.destroy', props.team), {
         errorBag: 'deleteTeam',
     });
 };

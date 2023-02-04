@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 import { defaultLogo } from '../Utility/DefaultLogo';
 import { EyeIcon, PencilIcon } from '@heroicons/vue/24/solid';
 import PrimaryButton from './PrimaryButton.vue';

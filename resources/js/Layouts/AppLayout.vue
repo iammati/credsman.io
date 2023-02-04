@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -18,7 +18,7 @@ const props = defineProps({
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
-    Inertia.put(route('current-team.update'), {
+    router.put(route('current-team.update'), {
         team_id: team.id,
     }, {
         preserveState: false,
@@ -26,7 +26,7 @@ const switchToTeam = (team) => {
 };
 
 const logout = () => {
-    Inertia.post(route('logout'));
+    router.post(route('logout'));
 };
 </script>
 
@@ -36,8 +36,8 @@ const logout = () => {
 
         <Banner />
 
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-800">
+            <nav class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -45,7 +45,7 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogo class="inline-block" />
+                                    <ApplicationLogo class="dark:text-white inline-block" />
                                 </Link>
                             </div>
 
@@ -55,6 +55,7 @@ const logout = () => {
                                     <NavLink
                                         :href="route('dashboard')"
                                         :active="route().current('dashboard')"
+                                        class="dark:text-slate-400"
                                     >
                                         Dashboard
                                     </NavLink>
@@ -67,6 +68,7 @@ const logout = () => {
                                 <NavLink
                                     :href="route('vaults')"
                                     :active="$page.url.startsWith('/vaults')"
+                                    class="dark:text-slate-400"
                                 >
                                     Vaults
                                 </NavLink>
@@ -74,7 +76,7 @@ const logout = () => {
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <div class="ml-3 relative">
+                            <div class="ml-3 mr-3 relative">
                                 <!-- Teams Dropdown -->
                                 <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
                                     <template #trigger>
@@ -131,6 +133,37 @@ const logout = () => {
                                     </template>
                                 </Dropdown>
                             </div>
+
+                            <button
+  id="theme-toggle"
+  type="button"
+  class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+>
+  <svg
+    id="theme-toggle-dark-icon"
+    class="w-5 h-5 hidden"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+    ></path>
+  </svg>
+  <svg
+    id="theme-toggle-light-icon"
+    class="w-5 h-5 hidden"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+    ></path>
+  </svg>
+</button>
 
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
@@ -298,8 +331,8 @@ const logout = () => {
             </nav>
 
             <!-- Page Heading -->
-            <header v-if="$slots.header" class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <header v-if="$slots.header" class="bg-white shadow dark:bg-gray-800">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 dark:text-white">
                     <slot name="header" />
                 </div>
             </header>
@@ -309,9 +342,9 @@ const logout = () => {
                 <slot />
             </main>
 
-            <section id="footer">
+            <section id="footer" class="dark:bg-gray-800">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-6">
-                    <p class="text-center">
+                    <p class="text-center dark:text-white">
                         Copyright © {{ $page.props.copyright }} licensed under MIT.
                     </p>
                 </div>

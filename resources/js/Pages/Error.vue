@@ -9,7 +9,6 @@ const props = defineProps({
     appVersion: String,
     laravelVersion: String,
     phpVersion: String,
-    appNameExtended: String,
 });
 
 const title = function () {

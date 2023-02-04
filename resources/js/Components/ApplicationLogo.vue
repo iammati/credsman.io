@@ -1,7 +1,9 @@
 <script setup>
-defineProps({
-    appNameExtended: String,
-});
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+
+const appNameExtended = computed(() => usePage().props.appNameExtended);
+const productName = computed(() => usePage().props.productName);
 </script>
 
 <template>
@@ -10,7 +12,7 @@ defineProps({
             {{ appNameExtended }} |
         </span>
 
-        Credsman.io
+        {{ productName ?? 'XD' }}
     </p>
 </template>
 
